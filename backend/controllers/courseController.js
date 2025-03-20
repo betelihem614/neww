@@ -28,3 +28,22 @@ exports.getGrades = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+
+exports.getStudentCourses = async (req, res) => {
+  try {
+    const courses = await Course.find({ students: req.user.id }).populate(
+      "teacher",
+      "name"
+    );
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+exports.getCourses = async (req, res) => {
+  const courses = await Course.find()
+    .populate("teacher", "name")
+    .populate("grades.student", "name");
+  res.json(courses);
+};
